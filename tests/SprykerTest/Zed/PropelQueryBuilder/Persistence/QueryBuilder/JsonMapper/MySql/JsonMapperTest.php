@@ -87,7 +87,7 @@ class JsonMapperTest extends Unit
      */
     protected function getOperatorMock(): OperatorInterface
     {
-        $operatorMock = $this->getMockForAbstractClass(OperatorInterface::class);
+        $operatorMock = $this->createMock(OperatorInterface::class);
 
         $operatorMock->expects($this->once())
             ->method('getValue')
