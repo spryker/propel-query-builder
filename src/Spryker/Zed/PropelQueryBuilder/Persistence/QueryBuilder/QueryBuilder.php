@@ -29,11 +29,6 @@ class QueryBuilder implements QueryBuilderInterface
      */
     protected $paginationMapper;
 
-    /**
-     * @param \Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\CriteriaMapperInterface $criteriaMapper
-     * @param \Spryker\Zed\PropelQueryBuilder\Persistence\Mapper\ColumnQueryMapperInterface $columnMapper
-     * @param \Spryker\Zed\PropelQueryBuilder\Persistence\Mapper\PaginationQueryMapperInterface $paginationMapper
-     */
     public function __construct(
         CriteriaMapperInterface $criteriaMapper,
         ColumnQueryMapperInterface $columnMapper,

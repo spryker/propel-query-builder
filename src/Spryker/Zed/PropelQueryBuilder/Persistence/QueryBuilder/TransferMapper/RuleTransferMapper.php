@@ -18,9 +18,6 @@ class RuleTransferMapper implements RuleTransferMapperInterface
      */
     protected $utilEncodingService;
 
-    /**
-     * @param \Spryker\Zed\PropelQueryBuilder\Dependency\Service\PropelQueryBuilderToUtilEncodingInterface $utilEncodingService
-     */
     public function __construct(PropelQueryBuilderToUtilEncodingInterface $utilEncodingService)
     {
         $this->utilEncodingService = $utilEncodingService;

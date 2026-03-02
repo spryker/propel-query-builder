@@ -42,9 +42,6 @@ class OperatorValueTest extends Unit
      */
     protected $rule;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->rule = new PropelQueryBuilderRuleSetTransfer();
@@ -53,9 +50,6 @@ class OperatorValueTest extends Unit
         $this->rule->setValue('bar');
     }
 
-    /**
-     * @return void
-     */
     public function testBeginsWith(): void
     {
         $operator = new BeginsWith();
@@ -64,9 +58,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar%', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testContains(): void
     {
         $operator = new Contains();
@@ -75,9 +66,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('%bar%', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testEndsWith(): void
     {
         $operator = new EndsWith();
@@ -86,9 +74,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('%bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testEqual(): void
     {
         $operator = new Equal();
@@ -97,9 +82,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testGreater(): void
     {
         $operator = new Greater();
@@ -108,9 +90,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testGreaterOrEqual(): void
     {
         $operator = new GreaterOrEqual();
@@ -119,9 +98,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testIn(): void
     {
         $operator = new In();
@@ -130,9 +106,6 @@ class OperatorValueTest extends Unit
         $this->assertSame(['bar'], $value);
     }
 
-    /**
-     * @return void
-     */
     public function testLess(): void
     {
         $operator = new Less();
@@ -141,9 +114,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testLessOrEqual(): void
     {
         $operator = new LessOrEqual();
@@ -152,9 +122,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testNotBeginsWith(): void
     {
         $operator = new NotBeginsWith();
@@ -163,9 +130,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar%', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testNotContains(): void
     {
         $operator = new NotContains();
@@ -174,9 +138,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('%bar%', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testNotEndsWith(): void
     {
         $operator = new NotEndsWith();
@@ -185,9 +146,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('%bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testNotEqual(): void
     {
         $operator = new NotEqual();
@@ -196,9 +154,6 @@ class OperatorValueTest extends Unit
         $this->assertSame('bar', $value);
     }
 
-    /**
-     * @return void
-     */
     public function testNotIn(): void
     {
         $operator = new NotIn();

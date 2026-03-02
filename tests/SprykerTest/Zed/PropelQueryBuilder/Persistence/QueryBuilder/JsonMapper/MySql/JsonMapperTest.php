@@ -47,9 +47,6 @@ class JsonMapperTest extends Unit
      */
     protected const ATTRIBUTE_NAME = 'ATTRIBUTE_NAME';
 
-    /**
-     * @return void
-     */
     public function testGetValueShouldReturnMappedJsonValue(): void
     {
         // Arrange
@@ -72,9 +69,6 @@ class JsonMapperTest extends Unit
         $this->assertSame($expectedValue, $mapperValue);
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PropelQueryBuilderRuleSetTransfer
-     */
     protected function getPropelQueryBuilderRuleSetTransfer(): PropelQueryBuilderRuleSetTransfer
     {
         return (new PropelQueryBuilderRuleSetTransfer())

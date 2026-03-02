@@ -152,9 +152,6 @@ class QueryContainerTest extends Unit
      */
     protected $query;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -167,9 +164,6 @@ class QueryContainerTest extends Unit
         $this->prepareTestProducts();
     }
 
-    /**
-     * @return void
-     */
     public function testPropelCreateQueryWithEmptyRuleSetShouldThrowException(): void
     {
         $this->expectException(RequiredTransferPropertyException::class);
@@ -179,9 +173,6 @@ class QueryContainerTest extends Unit
         $this->queryContainer->createQuery($this->query, $criteriaTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testPropelCreateQueryWithoutMappings(): void
     {
         $criteriaTransfer = $this->getCriteriaWithoutMappings();
@@ -193,9 +184,6 @@ class QueryContainerTest extends Unit
         $this->assertSkuCollection($results, static::EXPECTED_SKU_COLLECTION);
     }
 
-    /**
-     * @return void
-     */
     public function testPropelCreateQueryWithMappings(): void
     {
         $criteriaTransfer = $this->getCriteriaWithMappings();
@@ -207,9 +195,6 @@ class QueryContainerTest extends Unit
         $this->assertSkuCollection($results, static::EXPECTED_SKU_COLLECTION);
     }
 
-    /**
-     * @return void
-     */
     public function testCreateRuleSetFromJson(): void
     {
         $json = $this->jsonDataWithMappings;
@@ -223,9 +208,6 @@ class QueryContainerTest extends Unit
         $this->assertInstanceOf(PropelQueryBuilderRuleSetTransfer::class, $propelQueryBuilderRuleSetTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testPropelCreateQueryWithoutMappingsWithPagination(): void
     {
         $criteriaTransfer = $this->getCriteriaForPagination();
@@ -238,9 +220,6 @@ class QueryContainerTest extends Unit
         $this->assertSame($this->getFirstProductIdOnSecondPage(), $query->find()->getFirst()->getIdProduct());
     }
 
-    /**
-     * @return void
-     */
     public function testPropelCreateQueryWithoutMappingsWithPaginationAndItemsPerPage(): void
     {
         $criteriaTransfer = $this->getCriteriaForPaginationPageAndItemsPerPage();
@@ -253,9 +232,6 @@ class QueryContainerTest extends Unit
         $this->assertSame($this->getFirstProductIdOnSecondPage(), $query->find()->getFirst()->getIdProduct());
     }
 
-    /**
-     * @return void
-     */
     public function testPropelCreateQueryWithoutMappingsWithoutPaginationWithSelectedColumns(): void
     {
         $criteriaTransfer = $this->getCriteriaWithoutMappingsWithSelectedColumns();
@@ -267,9 +243,6 @@ class QueryContainerTest extends Unit
         $this->assertSkuCollectionWithSelectedColumns($results->toArray(), static::EXPECTED_SKU_COLLECTION);
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PropelQueryBuilderCriteriaTransfer
-     */
     protected function getCriteriaWithMappings(): PropelQueryBuilderCriteriaTransfer
     {
         $json = json_decode($this->jsonDataWithMappings, true);
@@ -290,9 +263,6 @@ class QueryContainerTest extends Unit
         return $criteriaTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PropelQueryBuilderCriteriaTransfer
-     */
     protected function getCriteriaWithoutMappings(): PropelQueryBuilderCriteriaTransfer
     {
         $json = json_decode($this->jsonDataNoMappings, true);
@@ -306,9 +276,6 @@ class QueryContainerTest extends Unit
         return $criteriaTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PropelQueryBuilderCriteriaTransfer
-     */
     protected function getCriteriaWithoutMappingsWithSelectedColumns(): PropelQueryBuilderCriteriaTransfer
     {
         $criteriaTransfer = $this->getCriteriaWithoutMappings();
@@ -329,9 +296,6 @@ class QueryContainerTest extends Unit
         return $criteriaTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PropelQueryBuilderCriteriaTransfer
-     */
     protected function getCriteriaForPagination(): PropelQueryBuilderCriteriaTransfer
     {
         $json = json_decode($this->jsonDataForPagination, true);
@@ -393,9 +357,6 @@ class QueryContainerTest extends Unit
         return $criteriaTransfer;
     }
 
-    /**
-     * @return int
-     */
     protected function getFirstProductIdOnSecondPage(): int
     {
         $idCollection = SpyProductQuery::create()
@@ -409,9 +370,6 @@ class QueryContainerTest extends Unit
         return current($idCollection);
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PropelQueryBuilderColumnSelectionTransfer
-     */
     protected function getColumnSelectionTransfer(): PropelQueryBuilderColumnSelectionTransfer
     {
         $columnSelectionTransfer = new PropelQueryBuilderColumnSelectionTransfer();
@@ -442,12 +400,6 @@ class QueryContainerTest extends Unit
         }
     }
 
-    /**
-     * @param array $collection
-     * @param array $expectedSkuCollection
-     *
-     * @return void
-     */
     protected function assertSkuCollectionWithSelectedColumns(array $collection, array $expectedSkuCollection): void
     {
         foreach ($collection as $productData) {
@@ -455,9 +407,6 @@ class QueryContainerTest extends Unit
         }
     }
 
-    /**
-     * @return void
-     */
     protected function prepareTestProducts(): void
     {
         $this->tester->haveProduct(['sku' => 'test_concrete_sku_1'], ['sku' => 'test_abstract_sku_1']);

@@ -27,10 +27,6 @@ class CriteriaMapper implements CriteriaMapperInterface
      */
     protected $jsonCriterionMapper;
 
-    /**
-     * @param \Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\OperatorBuilderInterface $operatorBuilder
-     * @param \Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\JsonMapper\JsonCriterionMapperInterface $jsonCriterionMapper
-     */
     public function __construct(OperatorBuilderInterface $operatorBuilder, JsonCriterionMapperInterface $jsonCriterionMapper)
     {
         $this->operatorBuilder = $operatorBuilder;
