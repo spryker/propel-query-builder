@@ -12,11 +12,14 @@ use Generated\Shared\Transfer\PropelQueryBuilderRuleSetTransfer;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\Criterion\AbstractCriterion;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Spryker\Zed\PropelQueryBuilder\Persistence\Exception\QueryBuilderException;
 use Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\JsonMapper\JsonCriterionMapperInterface;
 use Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\Operator\OperatorInterface;
 
 class CriteriaMapper implements CriteriaMapperInterface
 {
+    protected const string PATTERN_VALID_FIELD = '/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)?$/';
+
     /**
      * @var \Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\OperatorBuilderInterface
      */
@@ -171,6 +174,8 @@ class CriteriaMapper implements CriteriaMapperInterface
      * @param \Generated\Shared\Transfer\PropelQueryBuilderRuleSetTransfer $ruleSetTransfer
      * @param \Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\Operator\OperatorInterface $operator
      *
+     * @throws \Spryker\Zed\PropelQueryBuilder\Persistence\Exception\QueryBuilderException
+     *
      * @return \Propel\Runtime\ActiveQuery\Criterion\AbstractCriterion|null
      */
     protected function createCriterion(
@@ -178,6 +183,10 @@ class CriteriaMapper implements CriteriaMapperInterface
         PropelQueryBuilderRuleSetTransfer $ruleSetTransfer,
         OperatorInterface $operator
     ) {
+        if (!preg_match(static::PATTERN_VALID_FIELD, (string)$ruleSetTransfer->getField())) {
+            throw new QueryBuilderException(sprintf('Invalid field for PropelQueryBuilderRuleSet with id: %s', $ruleSetTransfer->getId()));
+        }
+
         if ($this->jsonCriterionMapper->isJsonAttribute($ruleSetTransfer)) {
             return $this->jsonCriterionMapper->createJsonCriterion(
                 $criteria,

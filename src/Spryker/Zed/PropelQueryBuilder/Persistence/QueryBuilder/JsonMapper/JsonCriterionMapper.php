@@ -14,6 +14,8 @@ use Spryker\Zed\PropelQueryBuilder\Persistence\QueryBuilder\Operator\OperatorInt
 
 class JsonCriterionMapper implements JsonCriterionMapperInterface
 {
+    protected const string PATTERN_VALID_ATTRIBUTE_NAME = '/^[a-zA-Z0-9_:-]+$/';
+
     /**
      * @var string
      */
@@ -83,6 +85,10 @@ class JsonCriterionMapper implements JsonCriterionMapperInterface
         }
 
         $attributeName = $this->getAttributeName($ruleSetTransfer);
+        if (!preg_match(static::PATTERN_VALID_ATTRIBUTE_NAME, (string)$attributeName)) {
+            throw new QueryBuilderException('Invalid json attribute name for PropelQueryBuilderRuleSet with id: ' . $ruleSetTransfer->getId());
+        }
+
         $field = $this->criterionMapper->getField($ruleSetTransfer, $operator, $attributeName);
         $value = $this->criterionMapper->getValue($ruleSetTransfer, $operator, $attributeName);
         $operatorExpression = $this->criterionMapper->getOperator($ruleSetTransfer, $operator, $attributeName);

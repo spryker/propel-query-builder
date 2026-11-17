@@ -9,6 +9,7 @@ namespace SprykerTest\Zed\PropelQueryBuilder\Persistence;
 
 use ArrayObject;
 use Codeception\Test\Unit;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\PropelQueryBuilderColumnSelectionTransfer;
 use Generated\Shared\Transfer\PropelQueryBuilderColumnTransfer;
 use Generated\Shared\Transfer\PropelQueryBuilderCriteriaMappingTransfer;
@@ -22,6 +23,7 @@ use Orm\Zed\Product\Persistence\SpyProductQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Map\TableMap;
 use Spryker\Shared\Kernel\Transfer\Exception\RequiredTransferPropertyException;
+use Spryker\Zed\PropelQueryBuilder\Persistence\Exception\QueryBuilderException;
 use Spryker\Zed\PropelQueryBuilder\Persistence\PropelQueryBuilderQueryContainer;
 
 /**
@@ -55,6 +57,14 @@ class QueryContainerTest extends Unit
      * @var int
      */
     public const EXPECTED_OFFSET = 10;
+
+    protected const string FIELD_PRODUCT_ABSTRACT_ATTRIBUTES = 'spy_product_abstract.attributes';
+
+    protected const string OPERATOR_EQUAL = 'equal';
+
+    protected const string INJECTION_VALUE = "x' OR '1'='1";
+
+    protected const string JSON_ATTRIBUTE_NAME = 'attr';
 
     /**
      * @var array
@@ -173,6 +183,31 @@ class QueryContainerTest extends Unit
         $this->queryContainer->createQuery($this->query, $criteriaTransfer);
     }
 
+    public function testPropelCreateQueryThrowsExceptionWhenRuleFieldIsNotAColumnName(): void
+    {
+        // Arrange
+        $criteriaTransfer = $this->createCriteriaWithSingleRule('sku', 'spy_product_abstract.sku) OR (1=1', 'test_abstract_sku_1');
+
+        // Expect
+        $this->expectException(QueryBuilderException::class);
+
+        // Act
+        $this->queryContainer->createQuery($this->query, $criteriaTransfer);
+    }
+
+    public function testPropelCreateQueryThrowsExceptionWhenJsonAttributeNameIsInvalid(): void
+    {
+        // Arrange
+        $criteriaTransfer = $this->createCriteriaWithSingleRule("spy_product_abstract.json.attr') OR ('1'='1", 'spy_product_abstract.attributes', 'test_abstract_sku_1');
+
+        // Expect
+        $this->expectException(QueryBuilderException::class);
+        $this->expectExceptionMessage("Invalid json attribute name for PropelQueryBuilderRuleSet with id: spy_product_abstract.json.attr') OR ('1'='1");
+
+        // Act
+        $this->queryContainer->createQuery($this->query, $criteriaTransfer);
+    }
+
     public function testPropelCreateQueryWithoutMappings(): void
     {
         $criteriaTransfer = $this->getCriteriaWithoutMappings();
@@ -241,6 +276,66 @@ class QueryContainerTest extends Unit
         $results = $query->find();
         $this->assertCount(static::EXPECTED_COUNT, $results);
         $this->assertSkuCollectionWithSelectedColumns($results->toArray(), static::EXPECTED_SKU_COLLECTION);
+    }
+
+    public function testCreateQueryThrowsExceptionWhenRuleFieldIsNotAColumnName(): void
+    {
+        // Arrange
+        $criteriaTransfer = $this->createCriteriaWithSingleRule('spy_product_abstract.sku', 'spy_product_abstract.sku) OR (1=1', 'x');
+
+        // Expect
+        $this->expectException(QueryBuilderException::class);
+
+        // Act
+        $this->queryContainer->createQuery($this->query, $criteriaTransfer);
+    }
+
+    public function testCreateQueryThrowsExceptionWhenJsonAttributeNameIsInvalid(): void
+    {
+        // Arrange
+        $idRule = "spy_product_abstract.json.attr') OR ('1'='1";
+        $criteriaTransfer = $this->createCriteriaWithSingleRule($idRule, static::FIELD_PRODUCT_ABSTRACT_ATTRIBUTES, 'x');
+
+        // Expect
+        $this->expectException(QueryBuilderException::class);
+        $this->expectExceptionMessage($idRule);
+
+        // Act
+        $this->queryContainer->createQuery($this->query, $criteriaTransfer);
+    }
+
+    public function testCreateQueryTreatsQuoteInJsonAttributeValueAsLiteral(): void
+    {
+        // Arrange
+        $productConcreteTransfer = $this->tester->haveProduct([], [
+            ProductAbstractTransfer::ATTRIBUTES => [static::JSON_ATTRIBUTE_NAME => static::INJECTION_VALUE],
+        ]);
+        $criteriaTransfer = $this->createCriteriaWithSingleRule(
+            sprintf('spy_product_abstract.json.%s', static::JSON_ATTRIBUTE_NAME),
+            static::FIELD_PRODUCT_ABSTRACT_ATTRIBUTES,
+            static::INJECTION_VALUE,
+        );
+
+        // Act
+        $query = $this->queryContainer->createQuery($this->query, $criteriaTransfer);
+
+        // Assert
+        $this->assertSame([$productConcreteTransfer->getSku()], $query->find()->getColumnValues('Sku'));
+    }
+
+    protected function createCriteriaWithSingleRule(string $id, string $field, string $value): PropelQueryBuilderCriteriaTransfer
+    {
+        $ruleTransfer = (new PropelQueryBuilderRuleSetTransfer())
+            ->setId($id)
+            ->setField($field)
+            ->setOperator(static::OPERATOR_EQUAL)
+            ->setValue($value);
+
+        $ruleSetTransfer = (new PropelQueryBuilderRuleSetTransfer())
+            ->setCondition(Criteria::LOGICAL_AND)
+            ->addRules($ruleTransfer);
+
+        return (new PropelQueryBuilderCriteriaTransfer())->setRuleSet($ruleSetTransfer);
     }
 
     protected function getCriteriaWithMappings(): PropelQueryBuilderCriteriaTransfer
